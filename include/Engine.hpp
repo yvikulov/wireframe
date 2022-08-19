@@ -43,8 +43,6 @@ private:
 public:
     // Default -----------------------------------------------------------------
     explicit Engine(Wireframe & wireframe);
-    explicit Engine(const Engine & engine); // ?
-    Engine& operator=(const Engine & engine); // ?
     ~Engine();
 
     // Start point -------------------------------------------------------------
