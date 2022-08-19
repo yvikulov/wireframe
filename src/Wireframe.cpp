@@ -15,11 +15,11 @@ Wireframe::Wireframe(const char * path)
         WireframeFile >> this->_row >> this->_column;
         for (size_t i = 0; i < this->_row; i++)
         {
+            this->_grid.push_back(std::vector<bool>());
             for (size_t j = 0; j < this->_column; j++)
             {
                 WireframeFile >> point;
-                if (point)
-                    this->_vpos.push_back(Point(i, j));
+                this->_grid[i].push_back(point);
             }
         }
     }
@@ -37,7 +37,10 @@ Wireframe::Wireframe(const Wireframe & wireframe)
 {
     if (&wireframe != this)
     {
-        std::ifstream WireframeFile(wireframe.getPath());
+        this->_path = new char[strlen(wireframe.getPath()) + 1];
+        strcpy(this->_path, wireframe.getPath());
+
+        std::ifstream WireframeFile(this->_path);
 
         if (WireframeFile.is_open())
         {
@@ -46,14 +49,21 @@ Wireframe::Wireframe(const Wireframe & wireframe)
             WireframeFile >> this->_row >> this->_column;
             for (size_t i = 0; i < this->_row; i++)
             {
+                this->_grid.push_back(std::vector<bool>());
                 for (size_t j = 0; j < this->_column; j++)
                 {
                     WireframeFile >> point;
-                    if (point)
-                        this->_vpos.push_back(Point(i, j));
+                    this->_grid[i].push_back(point);
                 }
             }
         }
+        else
+        {
+            delete[] this->_path;
+            this->_path = nullptr;
+        }
+
+        WireframeFile.close();
     }
 }
 
@@ -62,7 +72,10 @@ Wireframe& Wireframe::operator=(const Wireframe & wireframe)
 {
     if (&wireframe != this)
     {
-        std::ifstream WireframeFile(wireframe.getPath());
+        this->_path = new char[strlen(wireframe.getPath()) + 1];
+        strcpy(this->_path, wireframe.getPath());
+
+        std::ifstream WireframeFile(this->_path);
 
         if (WireframeFile.is_open())
         {
@@ -71,24 +84,31 @@ Wireframe& Wireframe::operator=(const Wireframe & wireframe)
             WireframeFile >> this->_row >> this->_column;
             for (size_t i = 0; i < this->_row; i++)
             {
+                this->_grid.push_back(std::vector<bool>());
                 for (size_t j = 0; j < this->_column; j++)
                 {
                     WireframeFile >> point;
-                    if (point)
-                        this->_vpos.push_back(Point(i, j));
+                    this->_grid[i].push_back(point);
                 }
             }
         }
+        else
+        {
+            delete[] this->_path;
+            this->_path = nullptr;
+        }
+
+        WireframeFile.close();
     }
     return *this;
 }
 
 // Get point from vector -------------------------------------------------------
-Wireframe::Point Wireframe::operator[](size_t i) const
+std::vector<bool> Wireframe::operator[](int i)
 {
-    if (i < this->size())
-        return this->_vpos[i];
-    return Wireframe::Point(-1, -1);
+    this->_i = i;
+    std::vector<bool> v = this->_grid[i];
+    return v;
 }
 
 // Gets ------------------------------------------------------------------------
@@ -110,7 +130,12 @@ unsigned int Wireframe::getColumn(void) const
 // Size of vector of points ----------------------------------------------------
 size_t Wireframe::size(void) const
 {
-    return this->_vpos.size();
+    size_t size = 0;
+
+    for (size_t i = 0; i < this->getRow(); i++)
+        size += this->_grid.size();
+    
+    return size;
 }
 
 Wireframe::~Wireframe()

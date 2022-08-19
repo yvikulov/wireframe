@@ -15,21 +15,20 @@ private:
     unsigned int _row = 0;
     unsigned int _column = 0;
 
-    // Vector of points --------------------------------------------------------
-    using Point = std::pair<int, int>;
-    using VectorPoint = std::vector<Point>;
-
-    VectorPoint _vpos;
+    // Grid --------------------------------------------------------------------
+    std::vector<std::vector<bool>> _grid;
+    size_t _i = 0;
 
 public:
     // Default -----------------------------------------------------------------
+    // explicit Wireframe(const char * path, bool COORD); RELATIVE, ABSOLUTE
     explicit Wireframe(const char * path);
     explicit Wireframe(const Wireframe & wireframe);
     Wireframe& operator=(const Wireframe & wireframe);
     ~Wireframe();
 
     // Get point ---------------------------------------------------------------
-    Point operator[](size_t i) const;
+    std::vector<bool> operator[](int i);
 
     // Size of array -----------------------------------------------------------
     size_t size(void) const;
