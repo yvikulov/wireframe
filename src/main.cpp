@@ -2,5 +2,8 @@
 
 int main(void)
 {
-    return EXIT_SUCCESS;
+    const char * path = "./assets/wireframe.txt";
+    Wireframe wireframe(path);
+    
+    // return Engine(wireframe).run();
 }
